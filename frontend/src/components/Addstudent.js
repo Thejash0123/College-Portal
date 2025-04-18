@@ -7,46 +7,10 @@ function StudentForm() {
   const [name, setName] = useState('');
   const [rollNo, setRollNo] = useState('');
 
-  const generateRollNo = async (classNumber) => {
-    const baseRoll = parseInt(`${classNumber}01`); // Start with 'classNumber01' (e.g., Class 1 => 1001)
-    
-    console.log('Base Roll:', baseRoll); // Debugging: Check the calculated base roll number
-    
-    try {
-      const response = await fetch(`http://localhost:5000/api/students/class/${classNumber}`);
-      const students = await response.json();
-  
-      console.log('Students from API:', students); // Debugging: Check the data fetched from API
-      
-      const existingRolls = students.map((s) => parseInt(s.rollNo)); // Ensure all roll numbers are integers
-      console.log('Existing Rolls:', existingRolls); // Debugging: Check the existing roll numbers in the array
-      
-      let candidateRoll = baseRoll;
-  
-      // Increment the roll number until an unused one is found
-      while (existingRolls.includes(candidateRoll)) {
-        console.log('Candidate Roll before increment:', candidateRoll); // Debugging: Check candidate roll before increment
-        candidateRoll = candidateRoll + 1; // Increment roll number by 1 (using candidateRoll + 1)
-        console.log('Candidate Roll after increment:', candidateRoll); // Debugging: Check candidate roll after increment
-      }
-  
-      setRollNo(candidateRoll.toString()); // Set the available roll number
-      console.log('Final Roll No:', candidateRoll); // Debugging: Log the final available roll number
-  
-    } catch (err) {
-      console.error('Error generating roll number:', err);
-      setRollNo(baseRoll.toString()); // Fallback to the base roll number if an error occurs
-    }
-  };
-  
   const handleClassChange = (e) => {
-    const selectedClass = e.target.value;
-    setStudentClass(selectedClass);
-    if (selectedClass) {
-      generateRollNo(selectedClass);
-    }
+    setStudentClass(e.target.value);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -69,11 +33,6 @@ function StudentForm() {
           toast.success('Student added successfully!', {
             position: 'top-right',
             autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
           });
         } else {
           toast.error('❌ Failed to save student');
@@ -97,11 +56,8 @@ function StudentForm() {
             style={{ width: '100%', padding: '8px' }}
           >
             <option value="">Select Class</option>
-            {[...Array(10)].map((_, i) => (
-              <option key={i + 1} value={i + 1}>
-                Class {i + 1}
-              </option>
-            ))}
+            <option value="BCA">BCA</option>
+            <option value="MCA">MCA</option>
           </select>
         </div>
         <div style={{ marginBottom: '10px' }}>
@@ -109,7 +65,8 @@ function StudentForm() {
           <input
             type="text"
             value={rollNo}
-            onChange={(e) => setRollNo(e.target.value)} // Allow editing roll number
+            onChange={(e) => setRollNo(e.target.value)}
+            required
             style={{ width: '100%', padding: '8px' }}
           />
         </div>
