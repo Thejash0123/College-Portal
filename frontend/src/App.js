@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RoleSelector from './components/RoleSelector';
 import ViewAttendance from './components/ViewAttendance';
 import Addstudent from './components/Addstudent'
-import AttendanceForm from './Addattendence';
+import AttendanceForm from './components/Addattendence';
 import Addmarks from './components/Addmarks';
 import ViewResult from './components/ViewResult';
 
